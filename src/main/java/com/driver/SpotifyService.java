@@ -68,6 +68,18 @@ public class SpotifyService {
     }
 
     public Playlist createPlaylistOnName(String mobile, String title, List<String> songTitles) throws Exception {
+        User user=null;
+        for(User user1: spotifyRepository.users)
+        {
+            if(user1.getMobile().equals(mobile))
+            {
+                user=user1;
+            }
+        }
+        if(user==null)
+        {
+            throw new Exception("User does not exist");
+        }
         return spotifyRepository.createPlaylistOnName(mobile,title,songTitles);
     }
 

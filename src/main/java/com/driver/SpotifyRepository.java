@@ -107,7 +107,41 @@ public class SpotifyRepository {
     }
 
     public Playlist createPlaylistOnName(String mobile, String title, List<String> songTitles) throws Exception {
-        Playlist playlist=new Playlist();
+        User user=null;
+        for(User user1:users)
+        {
+            if(user1.getMobile().equals(mobile))
+            {
+                user=user1;
+            }
+        }
+        Playlist playlist=new Playlist(title);
+        creatorPlaylistMap.put(user,playlist);
+
+        playlistListenerMap.putIfAbsent(playlist,new ArrayList<User>());
+        List<User> listOfListener=playlistListenerMap.get(playlist);
+        listOfListener.add(user);
+        playlistListenerMap.put(playlist,listOfListener);
+
+        playlistSongMap.putIfAbsent(playlist,new ArrayList<Song>());
+        List<Song> listWithGivenSongTitles=playlistSongMap.get(playlist);
+        for(Song song:songs)
+        {
+            for(String songTitle:songTitles)
+            {
+                if(song.getTitle().equals(songTitle))
+                {
+                    listWithGivenSongTitles.add(song);
+                }
+            }
+        }
+        playlistSongMap.put(playlist,listWithGivenSongTitles);
+
+        userPlaylistMap.putIfAbsent(user,new ArrayList<Playlist>());
+        List<Playlist> listOfPlayLists=userPlaylistMap.get(user);
+        listOfPlayLists.add(playlist);
+        userPlaylistMap.put(user,listOfPlayLists);
+
         return playlist;
     }
 
